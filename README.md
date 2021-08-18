@@ -8,7 +8,7 @@ Handles 0d, critical results and resistances rolls.
 ## How to install
 
 Just follow this link:
-https://discord.com/oauth2/authorize?client_id=unknown&scope=bot&permissions=32768 ** trying to find cliend_id **
+https://discord.com/oauth2/authorize?client_id=7b2418374a35ce74c723&scope=bot&permissions=32768
 
 The link will prompt you to authorize the bot on a server. It needs permissions to allow embeds (makes things look pretty). Once the bot's authorized, you'll see it in the Member List. In a public channel just type any of the commands outlined below and the bot will answer with a dice roll.
 

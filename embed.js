@@ -4,7 +4,7 @@ module.exports.help = new Discord.MessageEmbed()
 	.setColor("#0099ff")
 	.setTitle("Help")
 	.setDescription(
-		`Hey, I'm CoMBot. Use the following syntax to interact with me:`
+		`Hey, I'm WoMBot. Use the following syntax to interact with me:`
 	)
 	.addFields(
 		{

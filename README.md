@@ -1,4 +1,4 @@
-# Children of Midnight hackbot (modified from Blades in the Dicebot)
+# Witches of Midnight hackbot (modified from Blades in the Dicebot)
 
 A Discord bot custom made for Blades in the Dark.
 

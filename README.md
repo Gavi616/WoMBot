@@ -1,32 +1,41 @@
-# Children of Midnight hackbot (modified from Blades in the Dicebot)
+# Witches of Midnight bot (modified from Blades in the Dicebot)
 
-A Discord bot custom made for Blades in the Dark.
+A Discord bot custom hacked for Witches of Midnight (a Forged in the Dark game).
 
-Simpler syntax and clearer results.  
-Handles 0d, critical results and resistances rolls.  
-
-## How to install
-
-Just follow this link:
-https://discord.com/oauth2/authorize?client_id=7b2418374a35ce74c723&scope=bot&permissions=32768
-
-The link will prompt you to authorize the bot on a server. It needs permissions to allow embeds (makes things look pretty). Once the bot's authorized, you'll see it in the Member List. In a public channel just type any of the commands outlined below and the bot will answer with a dice roll.
+Simple syntax and clear results.  
+Handles 0d, critical results, resistances rolls, fortune rolls, gather information rolls, engagement rolls, major and minor arcana pulls, wyld magic complications and the Drawing Down the Moon ritual roll.
 
 ## Using it
 
 ### Rolling dice
 
-`!2` Roll 2 dice (max is 10).
+`!0` or `!1a` Action roll
 
 `!2r` Resistance roll
 
-`!2r /comment` Includes a comment.
+`!3f` Fortune roll
+
+`!4g` Gather Information roll
+
+`!2e` Engagement roll
+
+`!2w` Wyld Magic roll
+
+`!1ddtm` Drawing Down the Moon ritual roll
+
+`!1major` draws Major Arcana cards
+
+`!1minor` draws Minor Arcana cards
+
+`!1wyld` chooses a random Wyld Magic Complication
+
+`!2 /comment` Includes a comment
 
 ### Tutorial Commands.
 
-`!help` Makes the bot repeat this set of instructions in the discord.
+`!help` Makes the bot display a set of instructions.
 
-`!dice` Describes how to get more dice (push, assist, devil's bargain, group).
+`!dice` Describes how to get more dice.
 
 `!position` Describes position & effect.
 
@@ -34,10 +43,14 @@ The link will prompt you to authorize the bot on a server. It needs permissions 
 
 `!group` Describes group actions.
 
-### GM References
+### Lore Weaver References
 
 `!controlled` Lists consequences for Controlled
 
 `!risky` Lists consequences for Risky actions
 
 `!desperate` Lists consequences for Desperate actions.
+
+`!bargain` Lists different Fae/Cosmic Bargains.
+
+`!downtime` Lists Downtime actions.

@@ -4,21 +4,21 @@ require("dotenv").config();
 const obj = require("./embed.js");
 
 // true = on, false = off
-//const soundtoggle = false;
+const soundtoggle = true;
 const linktoggle = true;
 const spoilertoggle = false;
 
 bot.on("ready", () => {
-  console.log("WoMbot " + womversion + " is starting up.");
-  //console.log("Dice Sounds are " + (soundtoggle ? "on." : "off."));
+  console.log("WoMBot " + womversion + " is starting up.");
+  console.log("Dice Sounds are " + (soundtoggle ? "on." : "off."));
   console.log("3D Dice Link is " + (linktoggle ? "on." : "off."));
   console.log("Spoiler rolls & draws is " + (spoilertoggle ? "on." : "off."));
   console.log(`The command prefix is '${prefix}'`);
-  console.log("WoMbot " + womversion + " is now online.");
+  console.log("WoMBot " + womversion + " is now online.");
 });
 
 const prefix = process.env.BOT_PREFIX || "!";
-const womversion = "v1.5";
+const womversion = "v1.5vs";
 const minor_suits = ["Wands", "Pentacles", "Swords", "Cups"];
 const minor_values = ["Ace", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Page", "Knight", "Queen", "King"];
 const major_values = ["0 - The Fool", "1 - The Magician", "2 - The High Priestess", "3 - The Empress", "4 - The Emperor", "5 - The Hierophant", "6 - The Lovers", "7 - The Chariot", "8 - Strength", "9 - The Hermit", "10 - The Wheel of Fortune", "11 - Justice", "12 - The Hanged Man", "13 - Death", "14 - Temperance", "15 - The Devil", "16 - The Tower", "17 - The Star", "18 - The Moon", "19 - The Sun", "20 - Judgement", "21 - The World"];
@@ -45,6 +45,7 @@ function sleep(milliseconds) {
   } while (currentDate - date < milliseconds);
 }
 
+//Random added loadtimes at startup seem to help with randomization
 sleep(rand(0,33));
 sleep(rand(0,66));
 sleep(rand(0,99));
@@ -143,19 +144,19 @@ const roll = {
     }
 
     // Handles sounds in Discord Voice Channel
-    //if (soundtoggle)  {
-    //  if (!data.minor && !data.major && !data.wyldcomp) {
-    //    if (!!voiceChan) {
-    //      voiceChan.join().then(connection => {
-    //        var oneortwo = data.d == 1 ? "one" : "two";
-    //        var random1to6 = Math.floor(Math.random() * 6 + 1);
-    //        var filename = "./audio_files/" + oneortwo + "_" + random1to6 + ".mp3";
-    //        const dispatcher = connection.play(filename);
-    //        dispatcher.on("end", end => voiceChan.leave());
-    //      }).catch(err => console.log(err));
-    //    }
-    //  }
-    //}
+    if (soundtoggle)  {
+      if (!data.minor && !data.major && !data.wyldcomp) {
+        if (!!voiceChan) {
+          voiceChan.join().then(connection => {
+            var oneortwo = data.d == 1 ? "one" : "two";
+            var random1to6 = Math.floor(Math.random() * 6 + 1);
+            var filename = "./audio_files/" + oneortwo + "_" + random1to6 + ".mp3";
+            const dispatcher = connection.play(filename);
+            dispatcher.on("end", end => voiceChan.leave());
+          }).catch(err => console.log(err));
+        }
+      }
+    }
 
     return this.roller(data);
   },
@@ -484,7 +485,7 @@ const roll = {
 
 bot.on("message", (msg) => {
   if (msg.member != null) {
-    //voiceChan = msg.member.voice.channel;
+    voiceChan = msg.member.voice.channel;
     user = "&user=" + msg.author.username.replace(/ /g,"_");
   }
 
@@ -526,9 +527,4 @@ bot.on("message", (msg) => {
   }
 });
 
-bot.login(process.env['CLIENT_TOKEN']
-<<<<<<< HEAD
-);
-=======
-);
->>>>>>> f70080722d35350e7daeee36f0c8ed194ba9db63
+bot.login(process.env['CLIENT_TOKEN']);

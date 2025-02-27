@@ -1,6 +1,6 @@
 # Witches of Midnight bot (modified from Blades in the Dicebot)
 
-A Discord bot custom hacked for Witches of Midnight (a Forged in the Dark game).
+A Discord bot custom hacked for Witches of Midnight (a Forged in the Dark game) version 1.5vs
 
 Simple syntax and clear results.  
 Handles 0d, critical results, resistances rolls, fortune rolls, gather information rolls, engagement rolls, major and minor arcana pulls, wyld magic complications and the Drawing Down the Moon ritual roll.

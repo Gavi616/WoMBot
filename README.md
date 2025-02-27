@@ -53,4 +53,8 @@ Handles 0d, critical results, resistances rolls, fortune rolls, gather informati
 
 `!bargain` Lists different Fae/Cosmic Bargains.
 
+<<<<<<< HEAD
 `!downtime` Lists Downtime actions.
+=======
+`!downtime` Lists Downtime actions.
+>>>>>>> f70080722d35350e7daeee36f0c8ed194ba9db63

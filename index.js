@@ -527,4 +527,8 @@ bot.on("message", (msg) => {
 });
 
 bot.login(process.env['CLIENT_TOKEN']
+<<<<<<< HEAD
 );
+=======
+);
+>>>>>>> f70080722d35350e7daeee36f0c8ed194ba9db63

@@ -18,13 +18,23 @@
   },
   "repository": {
     "type": "git",
+<<<<<<< HEAD
     "url": "git+https://github.com/Gavi616/CoMbot.git"
+=======
+    "url": "git+https://github.com/Gavi616/WoMbot.git"
+>>>>>>> f70080722d35350e7daeee36f0c8ed194ba9db63
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
+<<<<<<< HEAD
     "url": "https://github.com/Gavi616/CoMbot/issues"
   },
   "homepage": "https://github.com/Gavi616/CoMbot#readme"
+=======
+    "url": "https://github.com/Gavi616/WoMbot/issues"
+  },
+  "homepage": "https://github.com/Gavi616/WoMbot#readme"
+>>>>>>> f70080722d35350e7daeee36f0c8ed194ba9db63
 }

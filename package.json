@@ -1,7 +1,7 @@
 {
-  "name": "WoMbot",
-  "version": "1.0.0",
-  "description": "A Discord bot custom hacked for Witches of Midnight (Forged in the Dark game).",
+  "name": "wombot",
+  "version": "1.5",
+  "description": "A Discord bot for Witches of Midnight (a Forged in the Dark game).",
   "main": "index.js",
   "dependencies": {
     "@discordjs/opus": "^0.7.0",

@@ -562,43 +562,83 @@ bot.on("message", async (msg) => {
     msg.reply(`An error occurred: ${error.message}`);
   }
 
-  if (msg.content === "!diagnostic") {
+  if (msg.content.toLowerCase() == "!cryptotest") {
     try {
-      // Run one of each type of user function
-      const diagnosticTests = [
-        "!0",        // Action roll 0d
-        "!3",        // Action roll 3d
-        "!2r",       // Resistance roll
-        "!3g",       // Gather Information roll
-        "!2f",       // Fortune roll
-        "!4e",       // Engagement roll
-        "!2w",       // Wyld Magic roll
-        "!3ddtm",    // Drawing Down the Moon roll
-        "!2minor",   // Minor Arcana draw
-        "!2major",   // Major Arcana draw
-        "!2wyld",    // Wyld Magic Complications draw
-      ];
+      const numTrials = 30000;
+      const results = [0, 0, 0, 0, 0, 0];
+      let cryptoSuccesses = 0;
+      let mathFallbacks = 0;
 
-      let diagnosticOutput = "Running diagnostic tests:\n";
-
-      for (const testCommand of diagnosticTests) {
-          const reply = await roll.parse(testCommand.slice(1)); // Remove "!"
-          // Remove trailing newlines from reply
-          const cleanedReply = reply.replace(/\n+$/, '');
-          diagnosticOutput += `> ${testCommand}: ${cleanedReply}\n`;
+      for (let i = 0; i < numTrials; i++) {
+        const rollValue = await new Promise(resolve => {
+          cryptoRand(1, 6).then(result => resolve(result));
+        });
+        if (typeof rollValue === 'number') {
+          cryptoSuccesses++;
+          results[rollValue - 1]++;
+        } else {
+          mathFallbacks++;
+          results[rollValue - 1]++;
+        }
       }
-      // Send the diagnostic output
-      msg.channel.send(diagnosticOutput);
 
-      // Log the diagnostic output to the console for the developer
-      console.log("Diagnostic test results (output may not be well formatted):");
-      console.log(diagnosticOutput);
+      let cryptoTestOutput = `Crypto Randomness Test (${numTrials} d6 trials):\n`;
+
+      // Calculate expected value and standard deviation
+      const expected = numTrials / 6;
+      const variance = (5 / 36) * numTrials; // Variance for a fair 6-sided die
+      const stdDev = Math.sqrt(variance);
+
+      for (let i = 0; i < 6; i++) {
+        const deviation = (results[i] - expected) / stdDev;
+        const deviationString = deviation >= 0 ? `+${deviation.toFixed(2)}` : `${deviation.toFixed(2)}`;
+        cryptoTestOutput += `${i + 1}: ${results[i]} (Deviation: ${deviationString} std devs)\n`;
+      }
+      cryptoTestOutput += `Math.random() Fallbacks: ${mathFallbacks}\n`;
+
+      msg.channel.send(cryptoTestOutput);
+
+      // Log the test output to the console for the developer
+      console.log(cryptoTestOutput);
     } catch (error) {
-      console.error("Diagnostic test error:", error);
-      msg.channel.send("Diagnostic test failed. Check the console for details.");
+      console.error("Crypto Randomness test error:", error);
+      msg.channel.send("Crypto Randomness test failed. Check the console for details.");
     }
-    return;
   }
+
+  if (msg.content.toLowerCase() == "!randtest") {
+    try {
+      const numTrials = 30000;
+      const results = [0, 0, 0, 0, 0, 0];
+
+      for (let i = 0; i < numTrials; i++) {
+        const rollValue = rand(1, 6);
+        results[rollValue - 1]++;
+      }
+
+      let randTestOutput = `Math.random() Randomness Test (${numTrials} d6 trials):\n`;
+
+      // Calculate expected value and standard deviation
+      const expected = numTrials / 6;
+      const variance = (5 / 36) * numTrials; // Variance for a fair 6-sided die
+      const stdDev = Math.sqrt(variance);
+
+      for (let i = 0; i < 6; i++) {
+        let deviation = (results[i] - expected) / stdDev;
+        const deviationString = deviation >= 0 ? `+${deviation.toFixed(2)}` : `${deviation.toFixed(2)}`;
+        randTestOutput += `${i + 1}: ${results[i]} (Deviation: ${deviationString} std devs)\n`;
+      }
+
+      msg.channel.send(randTestOutput);
+
+      // Log the test output to the console for the developer
+      console.log(randTestOutput);
+    } catch (error) {
+      console.error("Rand Randomness test error:", error);
+      msg.channel.send("Rand Randomness test failed. Check the console for details.");
+    }
+  }
+  return;
 });
 
 bot.login(process.env['CLIENT_TOKEN']);

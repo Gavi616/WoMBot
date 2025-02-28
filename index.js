@@ -582,15 +582,16 @@ bot.on("message", async (msg) => {
       let diagnosticOutput = "Running diagnostic tests:\n";
 
       for (const testCommand of diagnosticTests) {
-        const reply = await roll.parse(testCommand.slice(1)); // Remove "!"
-        diagnosticOutput += `> ${testCommand}: ${reply}\n`;
+          const reply = await roll.parse(testCommand.slice(1)); // Remove "!"
+          // Remove trailing newlines from reply
+          const cleanedReply = reply.replace(/\n+$/, '');
+          diagnosticOutput += `> ${testCommand}: ${cleanedReply}\n`;
       }
-
       // Send the diagnostic output
       msg.channel.send(diagnosticOutput);
 
       // Log the diagnostic output to the console for the developer
-      console.log("Diagnostic test results:");
+      console.log("Diagnostic test results (output may not be well formatted):");
       console.log(diagnosticOutput);
     } catch (error) {
       console.error("Diagnostic test error:", error);

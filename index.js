@@ -580,6 +580,42 @@ bot.on("message", async (msg) => {
     msg.reply(`An error occurred: ${error.message}`);
   }
 
+  if (msg.content.toLowerCase() == "!diagnostic") {
+    try {
+      // Run one of each type of user function
+      const diagnosticTests = [
+        "!0",        // Action roll 0d
+        "!3",        // Action roll 3d
+        "!2r",       // Resistance roll
+        "!3g",       // Gather Information roll
+        "!2f",       // Fortune roll
+        "!4e",       // Engagement roll
+        "!2w",       // Wyld Magic roll
+        "!3ddtm",    // Drawing Down the Moon roll
+        "!2minor",   // Minor Arcana draw
+        "!2major",   // Major Arcana draw
+        "!2wyld",    // Wyld Magic Complications draw
+      ];
+
+      let diagnosticOutput = "Running diagnostic tests (output may be poorly formatted):\n";
+
+      for (const testCommand of diagnosticTests) {
+        const reply = await roll.parse(testCommand.slice(1)); // Remove "!"
+        // Remove trailing newlines from reply
+        const cleanedReply = reply.replace(/\n+$/, '');
+        diagnosticOutput += `> ${testCommand}: ${cleanedReply}\n`;
+      }
+      // Send the diagnostic output
+      msg.channel.send(diagnosticOutput);
+
+      // Log the diagnostic output to the console for the developer
+      console.log(diagnosticOutput);
+    } catch (error) {
+      console.error("Diagnostic test error:", error);
+      msg.channel.send("Diagnostic test failed. Check the console for details.");
+    }
+  }
+
   if (msg.content.toLowerCase() == "!cryptotest") {
     try {
       const numTrials = 30000;

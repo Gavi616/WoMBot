@@ -20,11 +20,11 @@ bot.on("ready", () => {
 });
 
 const prefix = process.env.BOT_PREFIX || "!";
-const womversion = "v1.5.1";
+const womversion = "v1.6";
 const minor_suits = ["Wands", "Pentacles", "Swords", "Cups"];
 const minor_values = ["Ace", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Page", "Knight", "Queen", "King"];
 const major_values = ["0 - The Fool", "1 - The Magician", "2 - The High Priestess", "3 - The Empress", "4 - The Emperor", "5 - The Hierophant", "6 - The Lovers", "7 - The Chariot", "8 - Strength", "9 - The Hermit", "10 - The Wheel of Fortune", "11 - Justice", "12 - The Hanged Man", "13 - Death", "14 - Temperance", "15 - The Devil", "16 - The Tower", "17 - The Star", "18 - The Moon", "19 - The Sun", "20 - Judgement", "21 - The World"];
-const wm_effects = ["Caster regains all lost Essence from their brief connection to the Wyld", "A nearby spirit merges with the caster imparting a Trauma until the spirit is Banished", "Ringing in the caster’s ears makes Concentration impossible for the rest of the Undertaking", "Modify the Wyld Magic's Scale or Area by randomresult", "Modify the Wyld Magic's Duration by randomresult", "Modify the Wyld Magic's Range by randomresult", "Caster’s randombodypart into that of a random animal", "A randomly chosen angry mythical creature appears nearby and is focused on the caster", "A randomly chosen angry mythical creature appears nearby and is focused on spell’s target", "Caster loses all Essence; gains increased effect on all non-mental & non-magical Action rolls", "Caster becomes Disconnected from their magic until the end of the Undertaking or Downtime", "Caster is trapped between worlds (for at least one Undertaking, returning with new Trauma)", "If the effect is elemental in nature, substitute another element at random", "If the Wyld Magic has a target, a new target is chosen by a seemingly malevolent force"];
+const wm_effects = ["Caster regains all lost Essence from their brief connection to the Wyld", "A nearby spirit merges with the caster imparting a new temporary Trauma until the spirit is Banished", "Ringing in the caster’s ears makes Concentration impossible for the rest of the Undertaking", "Modify the Wyld Magic's Scale or Area by randomresult", "Modify the Wyld Magic's Duration by randomresult", "Modify the Wyld Magic's Range by randomresult", "Caster’s randombodypart into that of a random animal", "A randomly chosen angry mythical creature appears nearby and is focused on the caster", "A randomly chosen angry mythical creature appears nearby and is focused on spell’s target", "Caster loses all Essence; gains increased effect on all non-mental & non-magical Action rolls", "Caster becomes Disconnected from their magic until the end of the Undertaking or Downtime", "Caster is trapped between worlds (for at least one Undertaking, may choose to return with a new Trauma)", "If the effect is elemental in nature, substitute another element at random", "If the Wyld Magic has a target, a new target is chosen by a seemingly malevolent force"];
 
 var voiceChan = "";
 var rollType = "";
@@ -285,13 +285,19 @@ const roll = {
       data.minorsuits = [];
       data.minorvalues = [];
       data.num = [];
+      const drawnMinorIndices = new Set(); // Track indices of drawn minor arcana
 
       // draw random minor arcana
       for (let i = 0; i < data.dice; i++) {
         let newMinorSuit = 0;
         let newMinorValue = 0;
+        let rndMinorValueNum;
 
-        const rndMinorValueNum = await cryptoRand(0, minor_values.length - 1);
+        do {
+          rndMinorValueNum = await cryptoRand(0, minor_values.length - 1);
+        } while (drawnMinorIndices.has(rndMinorValueNum)); // Ensure unique draw
+
+        drawnMinorIndices.add(rndMinorValueNum);
         const rndMinorSuitIndex = await cryptoRand(0, minor_suits.length - 1);
         newMinorSuit = minor_suits[rndMinorSuitIndex];
         newMinorValue = minor_values[rndMinorValueNum];
@@ -315,12 +321,18 @@ const roll = {
       //Reset the array
       data.majorvalues = [];
       data.num = [];
+      const drawnMajorIndices = new Set(); // Track indices of drawn major arcana
 
       // draw random major arcana
       for (let i = 0; i < data.dice; i++) {
         let newMajorValue = 0;
+        let rndMajorValueNum;
 
-        const rndMajorValueNum = await cryptoRand(0, major_values.length - 1);
+        do {
+          rndMajorValueNum = await cryptoRand(0, major_values.length - 1);
+        } while (drawnMajorIndices.has(rndMajorValueNum)); // Ensure unique draw
+
+        drawnMajorIndices.add(rndMajorValueNum);
         newMajorValue = major_values[rndMajorValueNum];
         data.num.push(rndMajorValueNum);
 
@@ -342,13 +354,19 @@ const roll = {
       data.minorsuits = [];
       data.minorvalues = [];
       data.num = [];
+      const drawnWyldIndices = new Set(); // Track indices of drawn wyld arcana
 
       // draw random minor arcana (Wyld uses minors)
       for (let i = 0; i < data.dice; i++) {
         let newMinorSuit = 0;
         let newMinorValue = 0;
+        let rndMinorValueNum;
 
-        const rndMinorValueNum = await cryptoRand(0, minor_values.length - 1);
+        do {
+          rndMinorValueNum = await cryptoRand(0, minor_values.length - 1);
+        } while (drawnWyldIndices.has(rndMinorValueNum)); // Ensure unique draw
+
+        drawnWyldIndices.add(rndMinorValueNum);
         const rndMinorSuitIndex = await cryptoRand(0, minor_suits.length - 1);
         newMinorSuit = minor_suits[rndMinorSuitIndex];
         newMinorValue = minor_values[rndMinorValueNum];

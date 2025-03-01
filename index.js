@@ -3,6 +3,9 @@ const bot = new Discord.Client();
 require("dotenv").config();
 const obj = require("./embed.js");
 const crypto = require('crypto');
+const { joinVoiceChannel, createAudioPlayer, createAudioResource, AudioPlayerStatus } = require('@discordjs/voice');
+const fs = require('fs');
+const path = require('path');
 
 // true = on, false = off
 const soundtoggle = true;
@@ -34,6 +37,23 @@ var user = "&user=placeholder_user";
 var type = "&type=placeholder_type";
 var url_end = "&shadows=0&noresult&dicescale=2&roll";
 var complete_url = "";
+
+async function connectToVoiceChannel(channel) {
+  try {
+    return joinVoiceChannel({
+      channelId: channel.id,
+      guildId: channel.guild.id,
+      adapterCreator: channel.guild.voiceAdapterCreator,
+      selfDeaf: false,
+      selfMute: false,
+    });
+  } catch (error) {
+    console.error("Voice connection failed:", error);
+    // Retry after a delay (e.g., 5 seconds)
+    await new Promise(resolve => setTimeout(resolve, 5000));
+    return connectToVoiceChannel(channel); // Recursive retry
+  }
+}
 
 let cryptoFailCount = 0;
 const CRYPTO_FAIL_THRESHOLD = 3;
@@ -518,9 +538,71 @@ const roll = {
 };
 
 bot.on("message", async (msg) => {
+
+  let data;
+
+  if (msg.content.length > prefix.length && msg.content.slice(0, prefix.length) === prefix) {
+    let content = msg.content.slice(prefix.length);
+
+    if (!isNaN(content[0])) {
+      data = await roll.parse(content);
+    }
+  }
+
   if (msg.member != null) {
     voiceChan = msg.member.voice.channel;
     user = "&user=" + msg.author.username.replace(/ /g, "_");
+  }
+
+  if (soundtoggle && data && !data.minor && !data.major && !data.wyldcomp && msg.content.startsWith(prefix) && !isNaN(msg.content.slice(prefix.length).trim().split(' ')[0])) {
+    if (!!voiceChan) {
+      try {
+        console.log(voiceChan.guild);
+
+        const connection = joinVoiceChannel({
+          channelId: voiceChan.id,
+          guildId: voiceChan.guild.id,
+          adapterCreator: voiceChan.guild.voiceAdapterCreator,
+          selfDeaf: false,
+          selfMute: false,
+        });
+
+        const guild = voiceChan.guild;
+        if (guild.preferredLocale) {
+          console.log("Guild locale:" + guild.preferredLocale);
+        }
+
+        const player = createAudioPlayer();
+        const oneortwo = data.d == 1 ? "one" : "two";
+        const random1to6 = await cryptoRand(1, 6);
+        const filename = path.join(__dirname, "audio_files", `${oneortwo}_${random1to6}.mp3`);
+
+        if (fs.existsSync(filename)) {
+          const resource = createAudioResource(filename);
+
+          player.play(resource);
+          connection.subscribe(player);
+
+          player.on(AudioPlayerStatus.Idle, () => {
+            connection.destroy();
+          });
+
+          player.on('error', error => {
+            console.error('Audio player error:', error);
+            msg.channel.send("There was an error playing the audio.");
+            connection.destroy();
+          });
+        } else {
+          console.error(`Audio file not found: ${filename}`);
+          msg.channel.send("Audio file not found.");
+          connection.destroy();
+        }
+      } catch (err) {
+          console.error("Voice connection or playback error:", err);
+          console.error("Full error object:", err); // Log the entire error object
+          msg.channel.send("There was an error connecting to the voice channel or playing audio.");
+      }
+    }
   }
 
   const request = msg.content;
@@ -636,7 +718,7 @@ bot.on("message", async (msg) => {
         }
       }
 
-      let cryptoTestOutput = `Crypto Randomness Test (${numTrials} d6 trials):\n`;
+      let cryptoTestOutput = `Cryptographic Randomness Test (${numTrials} d6 trials):\n`;
 
       // Calculate expected value and standard deviation
       const expected = numTrials / 6;
@@ -655,8 +737,8 @@ bot.on("message", async (msg) => {
       // Log the test output to the console for the developer
       console.log(cryptoTestOutput);
     } catch (error) {
-      console.error("Crypto Randomness test error:", error);
-      msg.channel.send("Crypto Randomness test failed. Check the console for details.");
+      console.error("Cryptographic Randomness test error:", error);
+      msg.channel.send("Cryptographic Randomness test failed. Check the console for details.");
     }
   }
 
@@ -688,8 +770,8 @@ bot.on("message", async (msg) => {
       // Log the test output to the console for the developer
       console.log(randTestOutput);
     } catch (error) {
-      console.error("Rand Randomness test error:", error);
-      msg.channel.send("Rand Randomness test failed. Check the console for details.");
+      console.error("Math.random() Randomness test error:", error);
+      msg.channel.send("Math.random() Randomness test failed. Check the console for details.");
     }
   }
   return;
